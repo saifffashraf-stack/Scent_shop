@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة الأدمن | Scent_shop</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="container header-inner">
+            <a href="index.html" class="brand-logo">
+                Scent_shop
+                <span>ADMIN PANEL</span>
+            </a>
+            <a href="index.html" class="btn-outline-pill">← العودة للمتجر</a>
+        </div>
+    </header>
+
+    <main class="container" style="padding: 40px 20px;">
+        <h2 class="section-title">إدارة المنتجات والطلبات (الأدمن)</h2>
+
+        <section style="margin-bottom: 50px;">
+            <h3 style="margin-bottom: 20px;">جميع المنتجات المعروضة ومعلومات الناشر</h3>
+            <div id="adminProductsGrid" class="products-grid"></div>
+        </section>
+
+        <section>
+            <h3 style="margin-bottom: 20px;">طلبات العملاء والسلات المسجلة</h3>
+            <div id="adminOrdersList" class="orders-container"></div>
+        </section>
+    </main>
+
+    <script>
+        function renderAdminData() {
+            let products = JSON.parse(localStorage.getItem('storeProducts')) || [];
+            let orders = JSON.parse(localStorage.getItem('storeOrders')) || [];
+
+            const pGrid = document.getElementById('adminProductsGrid');
+            pGrid.innerHTML = '';
+            if(products.length === 0) {
+                pGrid.innerHTML = '<p>لا توجد منتجات مسجلة.</p>';
+            } else {
+                products.forEach((p, idx) => {
+                    const card = document.createElement('div');
+                    card.className = 'store-card';
+                    card.innerHTML = `
+                        <div class="store-card-img">
+                            <img src="${p.image}" alt="">
+                        </div>
+                        <div class="store-card-info">
+                            <h3>${p.name}</h3>
+                            <div class="card-price">LE ${p.price}</div>
+                            <div class="admin-seller-box">
+                                <img src="${p.seller.avatar}" alt="">
+                                <div>
+                                    <strong>${p.seller.name}</strong>
+                                    <span>${p.seller.email}</span>
+                                </div>
+                            </div>
+                            <button onclick="deleteProduct(${idx})" class="btn-pink full-width" style="background:#e74c3c; margin-top:10px;">حذف المنتج</button>
+                        </div>
+                    `;
+                    pGrid.appendChild(card);
+                });
+            }
+
+            const oList = document.getElementById('adminOrdersList');
+            oList.innerHTML = '';
+            if(orders.length === 0) {
+                oList.innerHTML = '<p>لا توجد طلبات جديدة.</p>';
+            } else {
+                orders.forEach(ord => {
+                    const box = document.createElement('div');
+                    box.className = 'order-card-admin';
+                    let itemsHtml = ord.items.map(i => `<li>${i.name} (${i.qty} قطعة) - ${i.price * i.qty} EGP</li>`).join('');
+                    box.innerHTML = `
+                        <div class="order-admin-header">
+                            <div class="buyer-info-flex">
+                                <img src="${ord.buyerAvatar || 'https://via.placeholder.com/40'}" alt="">
+                                <div>
+                                    <h4>${ord.buyerName}</h4>
+                                    <p>الإيميل: ${ord.buyerEmail}</p>
+                                    <p>الهاتف: ${ord.buyerPhone}</p>
+                                </div>
+                            </div>
+                            <span class="order-date">${ord.date}</span>
+                        </div>
+                        <ul class="order-items-list">${itemsHtml}</ul>
+                        <div class="order-total-bar">الإجمالي: <strong>${ord.total} EGP</strong></div>
+                    `;
+                    oList.appendChild(box);
+                });
+            }
+        }
+
+        window.deleteProduct = function(idx) {
+            let products = JSON.parse(localStorage.getItem('storeProducts')) || [];
+            products.splice(idx, 1);
+            localStorage.setItem('storeProducts', JSON.stringify(products));
+            renderAdminData();
+        }
+
+        renderAdminData();
+    </script>
+</body>
+</html>

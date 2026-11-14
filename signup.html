@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء حساب جديد | Scent_shop</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="announcement-bar">
+        <div class="marquee-track">
+            <span>أهلاً بيك في Scent_shop <i class="dot">◆</i></span>
+            <span>إنشاء حساب جديد <i class="dot">◆</i></span>
+        </div>
+    </div>
+
+    <header class="main-header">
+        <div class="container header-inner">
+            <a href="index.html" class="brand-logo">
+                Scent_shop
+                <span>FEELS LIKE YOU</span>
+            </a>
+            <a href="index.html" class="btn-outline-pill">← الرجوع للمتجر</a>
+        </div>
+    </header>
+
+    <main class="auth-wrapper">
+        <div class="auth-card">
+            <span class="mini-label">حساب جديد</span>
+            <h2>أنشئ حسابك الآن</h2>
+            <p class="auth-sub">كمّل بياناتك عشان تقدر تعرض منتجاتك.</p>
+
+            <form id="registerForm">
+                <div class="input-group">
+                    <label>الاسم الحقيقي بالكامل *</label>
+                    <input type="text" id="regName" placeholder="اكتب اسمك الحقيقي" required>
+                </div>
+
+                <div class="input-group">
+                    <label>حساب الجيميل (Gmail) *</label>
+                    <input type="email" id="regEmail" placeholder="example@gmail.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label>رابط صورة البروفايل (اختياري)</label>
+                    <input type="url" id="regAvatar" placeholder="https://example.com/image.jpg">
+                </div>
+
+                <div class="input-group">
+                    <label>كلمة المرور (الباسورد) *</label>
+                    <input type="password" id="regPassword" placeholder="اكتب كلمة مرور قوية" required>
+                </div>
+
+                <button type="submit" class="btn-pink full-width">إنشاء الحساب</button>
+            </form>
+
+            <p class="auth-footer-text">لديك حساب بالفعل؟ <a href="login.html">تسجيل الدخول</a></p>
+        </div>
+    </main>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const passedEmail = urlParams.get('email');
+        if (passedEmail) {
+            document.getElementById('regEmail').value = passedEmail;
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+            let avatar = document.getElementById('regAvatar').value.trim();
+
+            if (!avatar) {
+                avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=ff477e&color=fff`;
+            }
+
+            let users = JSON.parse(localStorage.getItem('storeUsers')) || [];
+            if (users.find(u => u.email === email)) {
+                alert('هذا الإيميل مسجل مسبقاً!');
+                return;
+            }
+
+            const newUser = { name, email, password, avatar };
+            users.push(newUser);
+            localStorage.setItem('storeUsers', JSON.stringify(users));
+            localStorage.setItem('storeUser', JSON.stringify(newUser));
+
+            alert('تم إنشاء الحساب بنجاح!');
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>

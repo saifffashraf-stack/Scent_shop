@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scent_shop | المتجر</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="announcement-bar">
+        <div class="marquee-track">
+            <span>أهلاً بيك في Scent_shop <i class="dot">◆</i></span>
+            <span>اعرض منتجاتك واشتري بكل سهولة <i class="dot">◆</i></span>
+        </div>
+    </div>
+
+    <header class="main-header">
+        <div class="container header-inner">
+            <a href="index.html" class="brand-logo">
+                Scent_shop
+                <span>FEELS LIKE YOU</span>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html">الرئيسية</a>
+                <a href="#products-area">المنتجات</a>
+                <a href="admin.html" id="adminLink" style="display:none; color: var(--pink-main); font-weight:900;">لوحة الأدمن</a>
+                <a href="login.html" id="navLoginLink">تسجيل الدخول</a>
+                <a href="signup.html" id="navSignupLink">حساب جديد</a>
+            </nav>
+            <div class="header-right-actions">
+                <button id="cartBtn" class="cart-btn-nav">🛒 سلة الشراء (<span id="cartCount">0</span>)</button>
+                <div id="userProfileArea" class="user-profile-nav" style="display: none;">
+                    <img id="userNavAvatar" src="" alt="صورة المستخدم">
+                    <span id="userNavName"></span>
+                </div>
+                <button id="openAddModal" class="btn-pink">+ أضف منتج</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero-section">
+        <div class="container hero-grid">
+            <div class="hero-text">
+                <h1>اعرض منتجاتك بستايل عصري ومميز.</h1>
+                <p>صوّر منتجك بكاميرا موبايلك أو اختاره من الاستوديو، حدد سعره وتفاصيله، واعرضه للبيع في ثواني.</p>
+                <div class="hero-actions">
+                    <button id="heroAddBtn" class="btn-pink">إضافة منتج جديد ←</button>
+                    <a href="#products-area" class="btn-outline-pill">تصفح المعروض</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-card-placeholder">
+                    <div class="floating-badge">جاهز للنشر ✨</div>
+                    <p>مساحتك الخاصة لعرض المنتجات</p>
+                    <span>صور بالكاميرا أو ارفع من الاستوديو</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="products-area" class="bestsellers-section">
+        <div class="container">
+            <h2 class="section-title">المنتجات المعروضة</h2>
+
+            <div id="emptyState" class="empty-box">
+                <h3>لا توجد منتجات مضافة حالياً</h3>
+                <p>اضغط على الزرار بالأسفل لالتقاط صورة لمنتجك بالكاميرا أو اختيارها من الاستوديو وتحديد سعره.</p>
+                <button id="emptyAddBtn" class="btn-pink">+ أضف أول منتج الآن</button>
+            </div>
+
+            <div id="productsGrid" class="products-grid"></div>
+        </div>
+    </section>
+
+    <div id="cartModal" class="modal-backdrop">
+        <div class="modal-card">
+            <div class="modal-top">
+                <h3>سلة المشتريات</h3>
+                <button id="closeCart" class="close-x">×</button>
+            </div>
+            <div id="cartItemsList" class="cart-items-container"></div>
+            <div class="cart-total-box">
+                <span>الإجمالي:</span>
+                <strong id="cartTotalPrice">0.00 EGP</strong>
+            </div>
+            <button id="checkoutBtn" class="btn-pink full-width" style="margin-top:15px;">إتمام الطلب</button>
+        </div>
+    </div>
+
+    <div id="productModal" class="modal-backdrop">
+        <div class="modal-card">
+            <div class="modal-top">
+                <h3>إضافة منتج جديد</h3>
+                <button id="closeModal" class="close-x">×</button>
+            </div>
+
+            <form id="addProductForm">
+                <div class="preview-area">
+                    <span id="placeholderText">صورة المنتج ستظهر هنا</span>
+                    <img id="previewImg" src="" alt="" style="display: none;">
+                </div>
+
+                <div class="media-buttons">
+                    <label class="media-btn">
+                        📷 افتح الكاميرا
+                        <input type="file" id="cameraInput" accept="image/*" capture="environment" hidden>
+                    </label>
+                    <label class="media-btn">
+                        🖼️ اختر من الاستوديو
+                        <input type="file" id="galleryInput" accept="image/*" hidden>
+                    </label>
+                </div>
+
+                <div class="input-group">
+                    <label>اسم المنتج *</label>
+                    <input type="text" id="pName" placeholder="اكتب اسم المنتج" required>
+                </div>
+
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>السعر (EGP) *</label>
+                        <input type="number" id="pPrice" placeholder="650.00" step="0.01" required>
+                    </div>
+                    <div class="input-group">
+                        <label>الحالة</label>
+                        <select id="pBadge">
+                            <option value="جديد">جديد</option>
+                            <option value="مستعمل">مستعمل</option>
+                            <option value="عرض خاص">عرض خاص</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>تفاصيل إضافية</label>
+                    <textarea id="pDesc" rows="2" placeholder="المقاس، اللون، الحالة..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-pink full-width">نشر المنتج في المتجر</button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container footer-center">
+            <div class="red-dash"></div>
+            <p class="copyright">Scent_shop  •  جميع الحقوق محفوظة</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentUser = JSON.parse(localStorage.getItem('storeUser'));
+        let products = JSON.parse(localStorage.getItem('storeProducts')) || [];
+        let cart = JSON.parse(localStorage.getItem('storeCart')) || [];
+
+        if (currentUser) {
+            document.getElementById('navLoginLink').style.display = 'none';
+            document.getElementById('navSignupLink').style.display = 'none';
+            document.getElementById('adminLink').style.display = 'inline-block';
+            
+            const profileArea = document.getElementById('userProfileArea');
+            profileArea.style.display = 'flex';
+            document.getElementById('userNavName').textContent = currentUser.name;
+            document.getElementById('userNavAvatar').src = currentUser.avatar || 'https://via.placeholder.com/40';
+        }
+
+        function updateCartCount() {
+            let totalCount = cart.reduce((sum, item) => sum + item.qty, 0);
+            document.getElementById('cartCount').textContent = totalCount;
+            localStorage.setItem('storeCart', JSON.stringify(cart));
+        }
+        updateCartCount();
+
+        const modal = document.getElementById('productModal');
+        const cartModal = document.getElementById('cartModal');
+
+        ['openAddModal', 'heroAddBtn', 'emptyAddBtn'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.onclick = () => {
+                if(!currentUser) {
+                    alert('يجب تسجيل الدخول أولاً لإضافة منتج!');
+                    window.location.href = 'login.html';
+                    return;
+                }
+                modal.classList.add('open');
+            };
+        });
+
+        document.getElementById('closeModal').onclick = () => modal.classList.remove('open');
+        document.getElementById('cartBtn').onclick = () => {
+            renderCartModal();
+            cartModal.classList.add('open');
+        };
+        document.getElementById('closeCart').onclick = () => cartModal.classList.remove('open');
+
+        window.onclick = (e) => {
+            if (e.target === modal) modal.classList.remove('open');
+            if (e.target === cartModal) cartModal.classList.remove('open');
+        };
+
+        const cameraInput = document.getElementById('cameraInput');
+        const galleryInput = document.getElementById('galleryInput');
+        const previewImg = document.getElementById('previewImg');
+        const placeholderText = document.getElementById('placeholderText');
+        let selectedImageBase64 = '';
+
+        function processImage(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                selectedImageBase64 = event.target.result;
+                previewImg.src = selectedImageBase64;
+                previewImg.style.display = 'block';
+                placeholderText.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+        cameraInput.addEventListener('change', processImage);
+        galleryInput.addEventListener('change', processImage);
+
+        document.getElementById('addProductForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (!selectedImageBase64) {
+                alert('يرجى التقاط صورة أو اختيارها أولاً');
+                return;
+            }
+
+            const newProduct = {
+                id: Date.now(),
+                name: document.getElementById('pName').value,
+                price: Number(document.getElementById('pPrice').value),
+                badge: document.getElementById('pBadge').value,
+                desc: document.getElementById('pDesc').value,
+                image: selectedImageBase64,
+                seller: {
+                    name: currentUser.name,
+                    email: currentUser.email,
+                    avatar: currentUser.avatar || 'https://via.placeholder.com/40'
+                }
+            };
+
+            products.unshift(newProduct);
+            localStorage.setItem('storeProducts', JSON.stringify(products));
+
+            e.target.reset();
+            selectedImageBase64 = '';
+            previewImg.style.display = 'none';
+            placeholderText.style.display = 'block';
+            modal.classList.remove('open');
+            renderProducts();
+        });
+
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            const emptyBox = document.getElementById('emptyState');
+            grid.innerHTML = '';
+
+            if (products.length === 0) {
+                emptyBox.style.display = 'block';
+                return;
+            }
+            emptyBox.style.display = 'none';
+
+            products.forEach((p, index) => {
+                const card = document.createElement('div');
+                card.className = 'store-card';
+                card.innerHTML = `
+                    <div class="store-card-img">
+                        <span class="card-tag">${p.badge}</span>
+                        <img src="${p.image}" alt="${p.name}">
+                    </div>
+                    <div class="store-card-info">
+                        <h3>${p.name}</h3>
+                        ${p.desc ? `<p class="card-sub">${p.desc}</p>` : ''}
+                        <div class="card-price">LE ${p.price.toFixed(2)}</div>
+                        <div class="qty-action-row">
+                            <div class="qty-selector">
+                                <button type="button" onclick="changeQty(${index}, -1)">-</button>
+                                <span id="qty-${index}">1</span>
+                                <button type="button" onclick="changeQty(${index}, 1)">+</button>
+                            </div>
+                            <button class="btn-pink" onclick="addToCart(${index})">إضافة للسلة</button>
+                        </div>
+                        <small class="seller-tag">بواسطة: ${p.seller.name}</small>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        window.changeQty = function(index, delta) {
+            const span = document.getElementById(`qty-${index}`);
+            let current = parseInt(span.textContent) + delta;
+            if (current < 1) current = 1;
+            span.textContent = current;
+        };
+
+        window.addToCart = function(index) {
+            const p = products[index];
+            const qty = parseInt(document.getElementById(`qty-${index}`).textContent);
+            
+            const existing = cart.find(item => item.id === p.id);
+            if (existing) {
+                existing.qty += qty;
+            } else {
+                cart.push({ ...p, qty });
+            }
+            updateCartCount();
+            alert('تمت الإضافة إلى السلة بنجاح!');
+        };
+
+        function renderCartModal() {
+            const container = document.getElementById('cartItemsList');
+            container.innerHTML = '';
+            let total = 0;
+
+            if (cart.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#777;">السلة فارغة حالياً</p>';
+                document.getElementById('cartTotalPrice').textContent = '0.00 EGP';
+                return;
+            }
+
+            cart.forEach((item, idx) => {
+                total += item.price * item.qty;
+                const div = document.createElement('div');
+                div.className = 'cart-item-row';
+                div.innerHTML = `
+                    <img src="${item.image}" alt="">
+                    <div class="cart-item-details">
+                        <h4>${item.name}</h4>
+                        <span>${item.price} EGP × ${item.qty}</span>
+                    </div>
+                    <button onclick="removeFromCart(${idx})" class="remove-item-btn">×</button>
+                `;
+                container.appendChild(div);
+            });
+            document.getElementById('cartTotalPrice').textContent = total.toFixed(2) + ' EGP';
+        }
+
+        window.removeFromCart = function(idx) {
+            cart.splice(idx, 1);
+            updateCartCount();
+            renderCartModal();
+        };
+
+        document.getElementById('checkoutBtn').onclick = function() {
+            if (cart.length === 0) {
+                alert('السلة فارغة!');
+                return;
+            }
+            if (!currentUser) {
+                alert('يجب تسجيل الدخول لإتمام الطلب');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const realName = prompt('أدخل اسمك الحقيقي لتأكيد الطلب:', currentUser.name);
+            if (!realName) return;
+            const phone = prompt('أدخل رقم هاتفك للتواصل:');
+            if (!phone) return;
+
+            let orders = JSON.parse(localStorage.getItem('storeOrders')) || [];
+            const newOrder = {
+                id: Date.now(),
+                buyerName: realName,
+                buyerPhone: phone,
+                buyerEmail: currentUser.email,
+                buyerAvatar: currentUser.avatar,
+                items: cart,
+                total: cart.reduce((sum, item) => sum + (item.price * item.qty), 0),
+                date: new Date().toLocaleString()
+            };
+
+            orders.unshift(newOrder);
+            localStorage.setItem('storeOrders', JSON.stringify(orders));
+            cart = [];
+            updateCartCount();
+            cartModal.classList.remove('open');
+            alert('تم إرسال طلبك بنجاح!');
+        };
+
+        renderProducts();
+    </script>
+</body>
+</html>
