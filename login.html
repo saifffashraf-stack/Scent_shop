@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="fade-in-body">
 
     <div class="announcement-bar">
         <div class="marquee-track">
@@ -29,13 +29,7 @@
     <main class="auth-wrapper">
         <div class="auth-card">
             <span class="mini-label">تسجيل الدخول</span>
-            <h2 style="font-size: 1.5rem; margin-bottom: 22px;">سجل دخولك لحسابك لإدارة منتجاتك بسهولة.</h2>
-
-            <button type="button" id="googleLoginBtn" class="btn-google full-width">
-                <span>G</span> تسجيل الدخول بواسطة جوجل
-            </button>
-
-            <div class="divider">أو عبر البريد الإلكتروني</div>
+            <h2 style="font-size: 1.4rem; margin-bottom: 22px;">سجل دخولك لحسابك لإدارة منتجاتك بسهولة.</h2>
 
             <form id="loginForm">
                 <div class="input-group">
@@ -51,6 +45,13 @@
                 <button type="submit" class="btn-pink full-width">تسجيل الدخول</button>
             </form>
 
+            <!-- زرار تسجيل الدخول بواسطة جوجل الداخلي السلس والآمن -->
+            <button type="button" id="googleLoginBtn" class="btn-google full-width" style="margin-top: 18px; border: 1px solid #ddd; padding: 12px; border-radius: 999px; background: #fff; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <span style="color: #ea4335; font-weight: 900; font-size: 1.1rem;">G</span> تسجيل الدخول بواسطة جوجل
+            </button>
+
+            <button type="button" id="recoveryBtn" class="btn-outline-pill full-width" style="margin-top: 14px; border-color: var(--pink-main); color: var(--pink-main); text-align: center;">استعادة كلمة المرور (Recovery)</button>
+
             <p class="auth-footer-text">ليس لديك حساب؟ <a href="signup.html">إنشاء حساب جديد</a></p>
         </div>
     </main>
@@ -62,23 +63,29 @@
             const password = document.getElementById('loginPassword').value.trim();
 
             let users = JSON.parse(localStorage.getItem('storeUsers')) || [];
-            const user = users.find(u => u.email === email && u.password === password);
+            const user = users.find(u => u.email === email);
 
-            if (user) {
-                localStorage.setItem('storeUser', JSON.stringify(user));
-                alert('تم تسجيل الدخول بنجاح!');
-                window.location.href = 'index.html';
-            } else {
-                alert('البريد الإلكتروني أو كلمة المرور غير صحيحة.');
+            if (!user) {
+                alert('لم يتم إنشاء هذا الحساب');
+                return;
             }
+
+            if (user.password !== password) {
+                alert('كلمة المرور أو الجيميل غير صحيحه');
+                return;
+            }
+
+            localStorage.setItem('storeUser', JSON.stringify(user));
+            alert('تم تسجيل الدخول بنجاح!');
+            window.location.href = 'index.html';
         });
 
         document.getElementById('googleLoginBtn').addEventListener('click', function() {
-            const email = prompt('أدخل إيميل جوجل الخاص بك:');
+            const email = prompt('أدخل إيميل جوجل (Gmail) الخاص بك:');
             if (!email) return;
             const name = prompt('أدخل اسمك الحقيقي:');
             if (!name) return;
-            const avatar = prompt('أدخل رابط صورتك الشخصية (أو اتركها فارغة لتلقائي):') || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=ff477e&color=fff`;
+            const avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=ff477e&color=fff`;
 
             let users = JSON.parse(localStorage.getItem('storeUsers')) || [];
             let existingUser = users.find(u => u.email === email);
@@ -92,6 +99,20 @@
             localStorage.setItem('storeUser', JSON.stringify(existingUser));
             alert('تم تسجيل الدخول بواسطة جوجل بنجاح!');
             window.location.href = 'index.html';
+        });
+
+        document.getElementById('recoveryBtn').addEventListener('click', function() {
+            const email = prompt('أدخل البريد الإلكتروني (Gmail) لاستعادة الحساب:');
+            if (!email) return;
+
+            let users = JSON.parse(localStorage.getItem('storeUsers')) || [];
+            const user = users.find(u => u.email === email);
+
+            if (user) {
+                alert(`تم العثور على الحساب!\nالاسم: ${user.name}\nكلمة المرور: ${user.password || 'مسجل عبر جوجل'}`);
+            } else {
+                alert('لم يتم إنشاء هذا الحساب');
+            }
         });
     </script>
 </body>

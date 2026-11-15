@@ -3,16 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scent_shop | المتجر</title>
+    <title>Scent_shop</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="fade-in-body">
 
-    <div class="announcement-bar">
-        <div class="marquee-track">
-            <span>أهلاً بيك في Scent_shop <i class="dot">◆</i></span>
-            <span>اعرض منتجاتك واشتري بكل سهولة <i class="dot">◆</i></span>
+    <!-- الشريط العلوي التفاعلي -->
+    <div class="top-hover-bar" id="topHoverBar">
+        <div class="container top-bar-inner">
+            <a href="index.html" class="top-bar-brand">Scent_shop</a>
+
+            <!-- أزرار التنقل الأساسية + زرار لوحة الأدمن الظاهر بوضوح -->
+            <div class="top-nav-links">
+                <a href="#hero-section">الرئيسية</a>
+                <a href="#products-area">المنتجات المعروضة</a>
+                <a href="admin.html" class="admin-top-link">لوحة الأدمن</a>
+            </div>
+
+            <!-- أزرار الحساب والسلة على اليمين -->
+            <div class="top-auth-links" id="topAuthArea">
+                <button id="cartBtnTop" class="cart-btn-top" type="button">🛒 السلة (<span id="cartCountTop">0</span>)</button>
+                <a href="login.html" class="auth-link-item">تسجيل الدخول</a>
+                <a href="signup.html" class="auth-link-item btn-signup-highlight">حساب جديد</a>
+            </div>
+
+            <!-- بروفايل المستخدم وزر الخروج لو مسجل دخول -->
+            <div id="userProfileArea" class="user-profile-nav" style="display: none;">
+                <button id="cartBtnUserTop" class="cart-btn-top" type="button">🛒 السلة (<span id="cartCountUserTop">0</span>)</button>
+                <img id="userNavAvatar" src="" alt="صورة">
+                <span id="userNavName"></span>
+                <button id="logoutBtn" class="logout-btn-nav" type="button">خروج</button>
+            </div>
         </div>
     </div>
 
@@ -22,31 +44,21 @@
                 Scent_shop
                 <span>FEELS LIKE YOU</span>
             </a>
-            <nav class="nav-links">
-                <a href="index.html">الرئيسية</a>
-                <a href="#products-area">المنتجات</a>
-                <a href="admin.html" id="adminLink" style="display:none; color: var(--pink-main); font-weight:900;">لوحة الأدمن</a>
-                <a href="login.html" id="navLoginLink">تسجيل الدخول</a>
-                <a href="signup.html" id="navSignupLink">حساب جديد</a>
-            </nav>
+
             <div class="header-right-actions">
-                <button id="cartBtn" class="cart-btn-nav">🛒 سلة الشراء (<span id="cartCount">0</span>)</button>
-                <div id="userProfileArea" class="user-profile-nav" style="display: none;">
-                    <img id="userNavAvatar" src="" alt="صورة المستخدم">
-                    <span id="userNavName"></span>
-                </div>
-                <button id="openAddModal" class="btn-pink">+ أضف منتج</button>
+                <button id="cartBtn" class="cart-btn-nav" type="button">🛒 السلة (<span id="cartCount">0</span>)</button>
+                <button id="openAddModal" class="btn-pink" type="button">+ أضف منتج</button>
             </div>
         </div>
     </header>
 
-    <section class="hero-section">
+    <section id="hero-section" class="hero-section">
         <div class="container hero-grid">
             <div class="hero-text">
-                <h1>اعرض منتجاتك بستايل عصري ومميز.</h1>
+                <h1>اعرض منتجاتك و اشتري.</h1>
                 <p>صوّر منتجك بكاميرا موبايلك أو اختاره من الاستوديو، حدد سعره وتفاصيله، واعرضه للبيع في ثواني.</p>
                 <div class="hero-actions">
-                    <button id="heroAddBtn" class="btn-pink">إضافة منتج جديد ←</button>
+                    <button id="heroAddBtn" class="btn-pink" type="button">إضافة منتج جديد ←</button>
                     <a href="#products-area" class="btn-outline-pill">تصفح المعروض</a>
                 </div>
             </div>
@@ -67,7 +79,7 @@
             <div id="emptyState" class="empty-box">
                 <h3>لا توجد منتجات مضافة حالياً</h3>
                 <p>اضغط على الزرار بالأسفل لالتقاط صورة لمنتجك بالكاميرا أو اختيارها من الاستوديو وتحديد سعره.</p>
-                <button id="emptyAddBtn" class="btn-pink">+ أضف أول منتج الآن</button>
+                <button id="emptyAddBtn" class="btn-pink" type="button">+ أضف أول منتج الآن</button>
             </div>
 
             <div id="productsGrid" class="products-grid"></div>
@@ -78,14 +90,14 @@
         <div class="modal-card">
             <div class="modal-top">
                 <h3>سلة المشتريات</h3>
-                <button id="closeCart" class="close-x">×</button>
+                <button id="closeCart" class="close-x" type="button">×</button>
             </div>
             <div id="cartItemsList" class="cart-items-container"></div>
             <div class="cart-total-box">
                 <span>الإجمالي:</span>
                 <strong id="cartTotalPrice">0.00 EGP</strong>
             </div>
-            <button id="checkoutBtn" class="btn-pink full-width" style="margin-top:15px;">إتمام الطلب</button>
+            <button id="checkoutBtn" class="btn-pink full-width" type="button" style="margin-top:15px;">إتمام الطلب</button>
         </div>
     </div>
 
@@ -93,7 +105,7 @@
         <div class="modal-card">
             <div class="modal-top">
                 <h3>إضافة منتج جديد</h3>
-                <button id="closeModal" class="close-x">×</button>
+                <button id="closeModal" class="close-x" type="button">×</button>
             </div>
 
             <form id="addProductForm">
@@ -104,11 +116,11 @@
 
                 <div class="media-buttons">
                     <label class="media-btn">
-                        📷 افتح الكاميرا
+                        📷 الكاميرا
                         <input type="file" id="cameraInput" accept="image/*" capture="environment" hidden>
                     </label>
                     <label class="media-btn">
-                        🖼️ اختر من الاستوديو
+                        🖼️ الاستوديو
                         <input type="file" id="galleryInput" accept="image/*" hidden>
                     </label>
                 </div>
@@ -156,9 +168,8 @@
         let cart = JSON.parse(localStorage.getItem('storeCart')) || [];
 
         if (currentUser) {
-            document.getElementById('navLoginLink').style.display = 'none';
-            document.getElementById('navSignupLink').style.display = 'none';
-            document.getElementById('adminLink').style.display = 'inline-block';
+            const topAuthArea = document.getElementById('topAuthArea');
+            if(topAuthArea) topAuthArea.style.display = 'none';
             
             const profileArea = document.getElementById('userProfileArea');
             profileArea.style.display = 'flex';
@@ -166,9 +177,22 @@
             document.getElementById('userNavAvatar').src = currentUser.avatar || 'https://via.placeholder.com/40';
         }
 
+        const logoutBtn = document.getElementById('logoutBtn');
+        if(logoutBtn) {
+            logoutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('storeUser');
+                window.location.reload();
+            });
+        }
+
         function updateCartCount() {
             let totalCount = cart.reduce((sum, item) => sum + item.qty, 0);
             document.getElementById('cartCount').textContent = totalCount;
+            const topCartCount = document.getElementById('cartCountTop');
+            if(topCartCount) topCartCount.textContent = totalCount;
+            const topCartUserCount = document.getElementById('cartCountUserTop');
+            if(topCartUserCount) topCartUserCount.textContent = totalCount;
             localStorage.setItem('storeCart', JSON.stringify(cart));
         }
         updateCartCount();
@@ -189,10 +213,18 @@
         });
 
         document.getElementById('closeModal').onclick = () => modal.classList.remove('open');
-        document.getElementById('cartBtn').onclick = () => {
+        
+        const openCartAction = () => {
             renderCartModal();
             cartModal.classList.add('open');
         };
+        
+        document.getElementById('cartBtn').onclick = openCartAction;
+        const cartBtnTop = document.getElementById('cartBtnTop');
+        if(cartBtnTop) cartBtnTop.onclick = openCartAction;
+        const cartBtnUserTop = document.getElementById('cartBtnUserTop');
+        if(cartBtnUserTop) cartBtnUserTop.onclick = openCartAction;
+
         document.getElementById('closeCart').onclick = () => cartModal.classList.remove('open');
 
         window.onclick = (e) => {
@@ -267,6 +299,12 @@
             products.forEach((p, index) => {
                 const card = document.createElement('div');
                 card.className = 'store-card';
+                
+                let deleteBtnHtml = '';
+                if (currentUser && currentUser.email === p.seller.email) {
+                    deleteBtnHtml = `<button onclick="deleteMyProduct(${p.id})" class="btn-pink full-width" type="button" style="background:#e74c3c; margin-top:8px; font-size:0.75rem; padding:6px;">حذف منتجي</button>`;
+                }
+
                 card.innerHTML = `
                     <div class="store-card-img">
                         <span class="card-tag">${p.badge}</span>
@@ -282,9 +320,10 @@
                                 <span id="qty-${index}">1</span>
                                 <button type="button" onclick="changeQty(${index}, 1)">+</button>
                             </div>
-                            <button class="btn-pink" onclick="addToCart(${index})">إضافة للسلة</button>
+                            <button class="btn-pink" type="button" onclick="addToCart(${index})">السلة</button>
                         </div>
                         <small class="seller-tag">بواسطة: ${p.seller.name}</small>
+                        ${deleteBtnHtml}
                     </div>
                 `;
                 grid.appendChild(card);
@@ -312,6 +351,14 @@
             alert('تمت الإضافة إلى السلة بنجاح!');
         };
 
+        window.deleteMyProduct = function(productId) {
+            if(confirm('هل تريد حذف هذا المنتج؟')) {
+                products = products.filter(p => p.id !== productId);
+                localStorage.setItem('storeProducts', JSON.stringify(products));
+                renderProducts();
+            }
+        };
+
         function renderCartModal() {
             const container = document.getElementById('cartItemsList');
             container.innerHTML = '';
@@ -333,7 +380,7 @@
                         <h4>${item.name}</h4>
                         <span>${item.price} EGP × ${item.qty}</span>
                     </div>
-                    <button onclick="removeFromCart(${idx})" class="remove-item-btn">×</button>
+                    <button onclick="removeFromCart(${idx})" class="remove-item-btn" type="button">×</button>
                 `;
                 container.appendChild(div);
             });
@@ -368,7 +415,6 @@
                 buyerName: realName,
                 buyerPhone: phone,
                 buyerEmail: currentUser.email,
-                buyerAvatar: currentUser.avatar,
                 items: cart,
                 total: cart.reduce((sum, item) => sum + (item.price * item.qty), 0),
                 date: new Date().toLocaleString()

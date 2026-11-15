@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in - Google Accounts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
+        body { background-color: #202124; color: #e8eaed; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .google-box { background: #292a2d; width: 100%; max-width: 450px; border-radius: 8px; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .google-logo { font-size: 24px; font-weight: 500; margin-bottom: 24px; display: flex; align-items: center; gap: 8px; }
+        .google-logo span { color: #8ab4f8; font-weight: 700; }
+        h2 { font-size: 24px; font-weight: 400; margin-bottom: 8px; }
+        p.sub { color: #9aa0a6; font-size: 14px; margin-bottom: 24px; }
+        .account-item { display: flex; align-items: center; gap: 14px; padding: 12px; border-bottom: 1px solid #3c4043; cursor: pointer; transition: 0.2s; border-radius: 6px; }
+        .account-item:hover { background: #3c4043; }
+        .account-item img, .account-item .avatar-placeholder { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #8ab4f8; color: #202124; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+        .account-info h4 { font-size: 14px; font-weight: 500; color: #e8eaed; }
+        .account-info span { font-size: 12px; color: #9aa0a6; }
+        .other-account { margin-top: 20px; font-size: 14px; color: #8ab4f8; cursor: pointer; display: inline-block; font-weight: 500; }
+        .other-account:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="google-box">
+        <div class="google-logo">🌐 <span>Google</span></div>
+        <h2>اختر حساباً</h2>
+        <p class="sub">متابعة إلى <b>Scent_shop</b></p>
+
+        <div id="accountsList"></div>
+
+        <div class="other-account" id="addAnotherAcc">+ استخدام حساب آخر</div>
+    </div>
+
+    <script>
+        // حسابات افتراضية تظهر للمستخدم شبه القائمة الحقيقية لجوجل
+        let defaultAccounts = [
+            { name: "Saifff Ashraf", email: "saifffashraf@gmail.com", avatar: "https://ui-avatars.com/api/?name=Saifff+Ashraf&background=8ab4f8&color=202124" },
+            { name: "Hwida Mohamed", email: "hwidamohamed157@gmail.com", avatar: "https://ui-avatars.com/api/?name=Hwida+Mohamed&background=e8eaed&color=202124" }
+        ];
+
+        let savedUsers = JSON.parse(localStorage.getItem('storeUsers')) || [];
+        // دمج الحسابات المسجلة مع الافتراضية
+        let allAccounts = [...defaultAccounts];
+        savedUsers.forEach(u => {
+            if(!allAccounts.some(acc => acc.email === u.email)) {
+                allAccounts.push({ name: u.name, email: u.email, avatar: u.avatar });
+            }
+        });
+
+        const listContainer = document.getElementById('accountsList');
+
+        function renderAccounts() {
+            listContainer.innerHTML = '';
+            allAccounts.forEach(acc => {
+                const div = document.createElement('div');
+                div.className = 'account-item';
+                div.innerHTML = `
+                    <img src="${acc.avatar}" alt="">
+                    <div class="account-info">
+                        <h4>${acc.name}</h4>
+                        <span>${acc.email}</span>
+                    </div>
+                `;
+                div.onclick = () => selectAccount(acc);
+                listContainer.appendChild(div);
+            });
+        }
+
+        function selectAccount(acc) {
+            localStorage.setItem('storeUser', JSON.stringify({
+                name: acc.name,
+                email: acc.email,
+                avatar: acc.avatar
+            }));
+            alert('تم تسجيل الدخول بنجاح بواسطة حساب: ' + acc.name);
+            window.location.href = 'index.html';
+        }
+
+        document.getElementById('addAnotherAcc').onclick = function() {
+            const name = prompt('أدخل اسمك الحقيقي:');
+            if(!name) return;
+            const email = prompt('أدخل بريد الجيميل (Gmail):');
+            if(!email) return;
+            const avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=8ab4f8&color=202124`;
+            
+            const newAcc = { name, email, avatar };
+            localStorage.setItem('storeUser', JSON.stringify(newAcc));
+            
+            let users = JSON.parse(localStorage.getItem('storeUsers')) || [];
+            users.push(newAcc);
+            localStorage.setItem('storeUsers', JSON.stringify(users));
+
+            alert('تم تسجيل الدخول بنجاح!');
+            window.location.href = 'index.html';
+        };
+
+        renderAccounts();
+    </script>
+</body>
+</html>

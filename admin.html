@@ -20,15 +20,20 @@
     </header>
 
     <main class="container" style="padding: 40px 20px;">
-        <h2 class="section-title">إدارة المنتجات والطلبات (الأدمن)</h2>
+        <h2 class="section-title">إدارة المنتجات والطلبات</h2>
 
         <section style="margin-bottom: 50px;">
-            <h3 style="margin-bottom: 20px;">جميع المنتجات المعروضة ومعلومات الناشر</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3>المنتجات المعروضة ومعلومات الناشر</h3>
+            </div>
             <div id="adminProductsGrid" class="products-grid"></div>
         </section>
 
         <section>
-            <h3 style="margin-bottom: 20px;">طلبات العملاء والسلات المسجلة</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3>طلبات العملاء (السلة)</h3>
+                <button onclick="clearOrders()" class="btn-pink" style="background:#e74c3c; padding:6px 14px; font-size:0.8rem;">مسح كل الطلبات القديمة</button>
+            </div>
             <div id="adminOrdersList" class="orders-container"></div>
         </section>
     </main>
@@ -75,21 +80,23 @@
                 orders.forEach(ord => {
                     const box = document.createElement('div');
                     box.className = 'order-card-admin';
-                    let itemsHtml = ord.items.map(i => `<li>${i.name} (${i.qty} قطعة) - ${i.price * i.qty} EGP</li>`).join('');
+                    let itemsHtml = ord.items.map(i => `<li>${i.name} - الكمية: ${i.qty} - السعر: ${i.price * i.qty} EGP</li>`).join('');
+                    
+                    const bName = ord.buyerName || ord.name || 'عميل غير معروف';
+                    const bPhone = ord.buyerPhone || ord.phone || 'غير متوفر';
+                    const bEmail = ord.buyerEmail || ord.email || 'غير متوفر';
+                    const bDate = ord.date || 'وقت غير محدد';
+
                     box.innerHTML = `
-                        <div class="order-admin-header">
-                            <div class="buyer-info-flex">
-                                <img src="${ord.buyerAvatar || 'https://via.placeholder.com/40'}" alt="">
-                                <div>
-                                    <h4>${ord.buyerName}</h4>
-                                    <p>الإيميل: ${ord.buyerEmail}</p>
-                                    <p>الهاتف: ${ord.buyerPhone}</p>
-                                </div>
-                            </div>
-                            <span class="order-date">${ord.date}</span>
+                        <div class="order-admin-header" style="display:flex; flex-direction:column; align-items:flex-start; gap:6px;">
+                            <h2 style="font-size: 1.7rem; font-weight: 900; color: var(--black);">${bName}</h2>
+                            <p style="font-size: 1.1rem; font-weight: 800; color: var(--pink-main);">رقم الهاتف: ${bPhone}</p>
+                            <p style="font-size: 0.85rem; color: var(--gray-text);">البريد الإلكتروني: ${bEmail}</p>
+                            <span style="font-size: 0.75rem; color: #888;">وقت الطلب: ${bDate}</span>
                         </div>
+                        <h4 style="margin: 14px 0 6px 0; font-size: 0.95rem; font-weight: 800;">المنتجات المطلوبة (الأوردر):</h4>
                         <ul class="order-items-list">${itemsHtml}</ul>
-                        <div class="order-total-bar">الإجمالي: <strong>${ord.total} EGP</strong></div>
+                        <div class="order-total-bar" style="margin-top: 10px;">إجمالي الطلب: <strong>${ord.total} EGP</strong></div>
                     `;
                     oList.appendChild(box);
                 });
@@ -101,6 +108,13 @@
             products.splice(idx, 1);
             localStorage.setItem('storeProducts', JSON.stringify(products));
             renderAdminData();
+        }
+
+        window.clearOrders = function() {
+            if(confirm('هل أنت متأكد من مسح جميع الطلبات القديمة؟')) {
+                localStorage.removeItem('storeOrders');
+                renderAdminData();
+            }
         }
 
         renderAdminData();
